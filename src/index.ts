@@ -1,1 +1,5 @@
-console.log('hi');
+import Tree from "./Tree";
+
+const array: number[] = [1, 2, 3, 4, 5, 6, 7];
+const tree = new Tree(array);
+tree.prettyPrint(tree.root);
