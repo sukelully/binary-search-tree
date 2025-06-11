@@ -1,30 +1,34 @@
 import TreeNode from './Node';
 
 export default class Tree {
-  input: number[];
+  arr: number[];
   root: TreeNode | null;
 
-  constructor(input: number[]) {
-    this.input = input;
-    this.root = this.buildTree(this.input);
+  constructor(arr: number[]) {
+    this.arr = arr;
+    this.root = this.buildTree(this.arr);
   }
 
-  buildTreeRecur(arr: number[], start: number, end: number): TreeNode | null {
+  buildSubTree(arr: number[], start: number, end: number): TreeNode | null {
     if (start > end) return null;
 
     const mid: number = Math.floor((start + end) / 2);
+    const root = new TreeNode(arr[mid]);
 
-    const root: TreeNode = new TreeNode(arr[mid]);
-    root.left = this.buildTreeRecur(arr, start, mid - 1);
-    root.right = this.buildTreeRecur(arr, mid + 1, end);
+    root.left = this.buildSubTree(arr, start, mid-1);
+    root.right = this.buildSubTree(arr, mid+1, end);
 
     return root;
   }
 
-  buildTree(arr: number[]) {
+  buildTree(arr: number[]): TreeNode | null {
+    if (!arr.length) {
+      this.root = null;
+      return null;
+    }
+    
     const sortedArr: number[] = [...new Set(arr.sort((a, b) => a - b))];
-    this.input = sortedArr;
-    return this.buildTreeRecur(this.input, 0, this.input.length - 1);
+    return this.buildSubTree(sortedArr, 0, sortedArr.length - 1);
   }
 
   prettyPrint(node: TreeNode | null, prefix: string = '', isLeft: boolean = true) {
