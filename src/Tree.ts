@@ -36,22 +36,54 @@ export default class Tree {
   }
 
   insert(val: number): void {
-    let current = this.root;
-    if (val === null || !current) return;
+    let node = this.root;
+    if (val === null || !node) return;
 
-    while (current) {
-      const direction: "left" | "right" = current.val > val ? "left" : "right";
-      if (current[direction] === null) {
-        current[direction] = new TreeNode(val);
+    while (node) {
+      const direction: 'left' | 'right' = val < node.val ? 'left' : 'right';
+      if (node[direction] === null) {
+        node[direction] = new TreeNode(val);
         return;
       } else {
-        current = current[direction];
+        node = node[direction];
       }
     }
   }
 
-  deleteItem(val: number): void {
-    
+  deleteItem(val: number, node: TreeNode | null = this.root): TreeNode | null {
+    if (!node) return null;
+
+    if (val < node.val) {
+      node.left = this.deleteItem(val, node.left);
+    } else if (val > node.val) {
+      node.right = this.deleteItem(val, node.right);
+    } else {
+      // Node found
+      if (!node.left && !node.right) {
+        // Leaf node
+        return null;
+      } else if (!node.right) {
+        // Node has one left child
+        return node.left;
+      } else if (!node.left) {
+        // Node has one right child
+        return node.right;
+      } else {
+        // Node has two children
+        // console.log('node has two children');
+        const minRight = this.findMinNode(node.right);
+        node.val = minRight.val;
+        node.right = this.deleteItem(minRight.val, node.right);
+      }
+    }
+    return node;
+  }
+
+  findMinNode(node: TreeNode): TreeNode {
+    while (node.left !== null) {
+      node = node.left;
+    }
+    return node;
   }
 
   prettyPrint(
