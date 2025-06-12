@@ -104,20 +104,57 @@ export default class Tree {
   }
 
   levelOrder(callback: (node: TreeNode) => void): void {
-    if (typeof callback !== "function") {
-      throw new Error("Callback function is required");
-    }
+    this.validateCallback(callback);
 
     if (!this.root) return;
 
     const queue: TreeNode[] = [this.root];
 
     while (queue.length) {
-      const current: TreeNode = queue[0];
-      callback(current);
-      if (current.left !== null) queue.push(current.left);
-      if (current.right !== null) queue.push(current.right);
+      const node: TreeNode = queue[0];
+      callback(node);
+      if (node.left !== null) queue.push(node.left);
+      if (node.right !== null) queue.push(node.right);
       queue.shift();
+    }
+  }
+
+  inOrder(callback: (node: TreeNode) => void, node: TreeNode | null = this.root): void {
+    // left -> root -> right
+    this.validateCallback(callback);
+
+    if (node === null) return;
+    this.inOrder(callback, node.left);
+    callback(node);
+    this.inOrder(callback, node.right);
+    return;
+  }
+
+  preOrder(callback: (node: TreeNode) => void, node: TreeNode | null = this.root): void {
+    // root -> left -> right
+    this.validateCallback(callback);
+
+    if (node === null) return;
+    callback(node);
+    this.preOrder(callback, node.left);
+    this.preOrder(callback, node.right);
+    return;
+  }
+
+  postOrder(callback: (node: TreeNode) => void, node: TreeNode | null = this.root): void {
+    // left -> right -> root
+    this.validateCallback(callback);
+
+    if (node === null) return; 
+    this.postOrder(callback, node.left);
+    this.postOrder(callback, node.right);
+    callback(node);
+    return;
+  }
+
+  validateCallback(callback: (node: TreeNode) => void): void {
+    if (typeof callback !== "function") {
+      throw new Error("Callback function is required");
     }
   }
 
