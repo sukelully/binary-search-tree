@@ -31,14 +31,41 @@ export default class Tree {
     return this.buildSubTree(sortedArr, 0, sortedArr.length - 1);
   }
 
-  prettyPrint(node: TreeNode | null, prefix: string = '', isLeft: boolean = true) {
+  insert(val: number): void {
+    let node = this.root;
+    if (!val || !node) return;
+
+    while (node !== null && (node.left !== null || node.right !== null)) {
+      console.log(node.val);
+      if (val < node.val && node.left !== null) {
+        node = node.left;
+      } else if (val > node.val && node.right !== null) {
+        node = node.right;
+      } else {
+        // Leaf node rached
+        break;
+      }
+    }
+    
+    // Leaf node reached
+    if (node !== null && val < node.val) {
+      node.left = new TreeNode(val);
+    } else if (node !== null && val > node.val) {
+      node.right = new TreeNode(val);
+    } else {
+      console.log('Node already exists');
+      return;
+    }
+  }
+
+  prettyPrint(node: TreeNode | null, prefix: string = '', isLeft: boolean = true): void {
     if (node === null) {
       return;
     }
     if (node.right !== null) {
       this.prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
     }
-    console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`);
+    console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.val}`);
     if (node.left !== null) {
       this.prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
     }
