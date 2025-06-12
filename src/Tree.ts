@@ -9,6 +9,15 @@ export default class Tree {
     this.root = this.buildTree(this.arr);
   }
 
+  buildTree(arr: number[]): TreeNode | null {
+    if (!arr.length) {
+      return null;
+    }
+
+    const sortedArr: number[] = [...new Set(arr.sort((a, b) => a - b))];
+    return this.buildSubTree(sortedArr, 0, sortedArr.length - 1);
+  }
+
   buildSubTree(
     sortedArr: number[],
     start: number,
@@ -26,17 +35,8 @@ export default class Tree {
     return root;
   }
 
-  buildTree(arr: number[]): TreeNode | null {
-    if (!arr.length) {
-      return null;
-    }
-
-    const sortedArr: number[] = [...new Set(arr.sort((a, b) => a - b))];
-    return this.buildSubTree(sortedArr, 0, sortedArr.length - 1);
-  }
-
   insert(val: number): void {
-    let node = this.root;
+    let node: TreeNode | null = this.root;
     if (val === null || !node) return;
 
     while (node) {
@@ -70,7 +70,6 @@ export default class Tree {
         return node.right;
       } else {
         // Node has two children
-        // console.log('node has two children');
         const minRight = this.findMinNode(node.right);
         node.val = minRight.val;
         node.right = this.deleteItem(minRight.val, node.right);
@@ -87,14 +86,14 @@ export default class Tree {
   }
 
   find(val: number): TreeNode | null {
-    let node = this.root;
+    let node: TreeNode | null = this.root;
 
     if (!node) {
       return null;
     }
 
     while (node) {
-      const direction: "left" | "right" = val < node.val ? "left" : "right";
+      const direction: 'left' | 'right' = val < node.val ? 'left' : 'right';
       if (node.val === val) {
         return node;
       } else {
@@ -102,6 +101,24 @@ export default class Tree {
       }
     }
     return null;
+  }
+
+  levelOrder(callback: (node: TreeNode) => void): void {
+    if (typeof callback !== "function") {
+      throw new Error("Callback function is required");
+    }
+
+    if (!this.root) return;
+
+    const queue: TreeNode[] = [this.root];
+
+    while (queue.length) {
+      const current: TreeNode = queue[0];
+      callback(current);
+      if (current.left !== null) queue.push(current.left);
+      if (current.right !== null) queue.push(current.right);
+      queue.shift();
+    }
   }
 
   prettyPrint(
