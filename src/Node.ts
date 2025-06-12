@@ -1,11 +1,9 @@
 export default class TreeNode {
     val: number;
-    left: TreeNode | null;
-    right: TreeNode | null;
+    left: TreeNode | null = null;
+    right: TreeNode | null = null;
 
     constructor(val: number) {
         this.val = val;
-        this.left = null;
-        this.right = null;
     }
 }
