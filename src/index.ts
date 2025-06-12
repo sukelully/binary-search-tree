@@ -5,3 +5,4 @@ const tree = new Tree(array);
 tree.prettyPrint(tree.root);
 tree.deleteItem(10);
 tree.prettyPrint(tree.root);
+console.log(tree.find(13));

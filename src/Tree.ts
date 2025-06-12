@@ -86,6 +86,24 @@ export default class Tree {
     return node;
   }
 
+  find(val: number): TreeNode | null {
+    let node = this.root;
+
+    if (!node) {
+      return null;
+    }
+
+    while (node) {
+      const direction: "left" | "right" = val < node.val ? "left" : "right";
+      if (node.val === val) {
+        return node;
+      } else {
+        node = node[direction];
+      }
+    }
+    return null;
+  }
+
   prettyPrint(
     node: TreeNode | null,
     prefix: string = '',
