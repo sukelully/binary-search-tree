@@ -121,7 +121,7 @@ export default class Tree {
 
   inOrder(callback: (node: TreeNode) => void, node: TreeNode | null = this.root): void {
     // left -> root -> right
-    this.validateCallback(callback);
+    if (node === this.root) this.validateCallback(callback);
 
     if (node === null) return;
     this.inOrder(callback, node.left);
@@ -132,7 +132,7 @@ export default class Tree {
 
   preOrder(callback: (node: TreeNode) => void, node: TreeNode | null = this.root): void {
     // root -> left -> right
-    this.validateCallback(callback);
+    if (node === this.root) this.validateCallback(callback);
 
     if (node === null) return;
     callback(node);
@@ -143,7 +143,7 @@ export default class Tree {
 
   postOrder(callback: (node: TreeNode) => void, node: TreeNode | null = this.root): void {
     // left -> right -> root
-    this.validateCallback(callback);
+    if (node === this.root) this.validateCallback(callback);
 
     if (node === null) return; 
     this.postOrder(callback, node.left);
@@ -156,6 +156,15 @@ export default class Tree {
     if (typeof callback !== "function") {
       throw new Error("Callback function is required");
     }
+  }
+
+  height(node: TreeNode | null = this.root): number {
+    if (node === null) return -1;
+
+    const leftHeight: number = this.height(node.left);
+    const rightHeight: number = this.height(node.right);
+    
+    return Math.max(leftHeight, rightHeight) + 1;
   }
 
   prettyPrint(
