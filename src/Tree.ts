@@ -119,7 +119,10 @@ export default class Tree {
     }
   }
 
-  inOrder(callback: (node: TreeNode) => void, node: TreeNode | null = this.root): void {
+  inOrder(
+    callback: (node: TreeNode) => void,
+    node: TreeNode | null = this.root
+  ): void {
     // left -> root -> right
     if (node === this.root) this.validateCallback(callback);
 
@@ -130,7 +133,10 @@ export default class Tree {
     return;
   }
 
-  preOrder(callback: (node: TreeNode) => void, node: TreeNode | null = this.root): void {
+  preOrder(
+    callback: (node: TreeNode) => void,
+    node: TreeNode | null = this.root
+  ): void {
     // root -> left -> right
     if (node === this.root) this.validateCallback(callback);
 
@@ -141,11 +147,14 @@ export default class Tree {
     return;
   }
 
-  postOrder(callback: (node: TreeNode) => void, node: TreeNode | null = this.root): void {
+  postOrder(
+    callback: (node: TreeNode) => void,
+    node: TreeNode | null = this.root
+  ): void {
     // left -> right -> root
     if (node === this.root) this.validateCallback(callback);
 
-    if (node === null) return; 
+    if (node === null) return;
     this.postOrder(callback, node.left);
     this.postOrder(callback, node.right);
     callback(node);
@@ -153,18 +162,48 @@ export default class Tree {
   }
 
   validateCallback(callback: (node: TreeNode) => void): void {
-    if (typeof callback !== "function") {
-      throw new Error("Callback function is required");
+    if (typeof callback !== 'function') {
+      throw new Error('Callback function is required');
     }
   }
 
   height(node: TreeNode | null = this.root): number {
-    if (node === null) return -1;
+    if (node === null) return 0;
 
     const leftHeight: number = this.height(node.left);
     const rightHeight: number = this.height(node.right);
-    
+
     return Math.max(leftHeight, rightHeight) + 1;
+  }
+
+  depth(val: number): number {
+    let node: TreeNode | null = this.root;
+    let count = 0;
+
+    while (node) {
+      const direction: 'left' | 'right' = val < node.val ? 'left' : 'right';
+      if (node.val === val) return count;
+        count++;
+        node = node[direction];
+    }
+    return -1;
+  }
+
+  isBalanced(): boolean {
+    let isBalanced: boolean = true;
+
+    this.levelOrder((node) => {
+      const lHeight = this.height(node.left);
+      const rHeight = this.height(node.right);
+
+      if (Math.abs(lHeight - rHeight) > 1) isBalanced = false;
+      if (!isBalanced) return isBalanced;
+    });
+    return isBalanced;
+  }
+
+  rebalance() {
+
   }
 
   prettyPrint(
