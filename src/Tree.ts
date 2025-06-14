@@ -202,8 +202,11 @@ export default class Tree {
     return isBalanced;
   }
 
-  rebalance() {
-
+  rebalance():void {
+    const newArr: number[] = [];
+    this.levelOrder((node) => newArr.push(node.val));
+    console.log(newArr);
+    this.root = this.buildTree(newArr);
   }
 
   prettyPrint(
